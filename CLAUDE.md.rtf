@@ -1,0 +1,53 @@
+{\rtf1\ansi\ansicpg1254\cocoartf2868
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 # Dolapdanevar - Geli\uc0\u351 mi\u351  Mutfak Asistan\u305  Rehberi\
+\
+Bu dosya, projenin basit bir tarif \'fcreticiden; \'e7ok kullan\uc0\u305 c\u305 l\u305 , veri senkronizasyonlu ve modern bir SaaS platformuna d\'f6n\'fc\u351 \'fcm s\'fcrecini ve standartlar\u305 n\u305  tan\u305 mlar.\
+\
+## \uc0\u55357 \u56960  Teknoloji Y\u305 \u287 \u305 n\u305  (Hedef)\
+- **Frontend:** React 19 (Vite) + Tailwind CSS + Framer Motion (Animasyonlar)\
+- **Backend:** Node.js (Express) - Vercel Serverless Functions uyumlu\
+- **Veritaban\uc0\u305  & Auth:** Supabase (PostgreSQL + Auth + Edge Functions)\
+- **Yapay Zeka:** Groq Cloud (Llama-3.3-70b)\
+- **Deployment:** GitHub & Vercel\
+\
+## \uc0\u55357 \u57056 \u65039  Temel Komutlar\
+- Kurulum: `npm install`\
+- Geli\uc0\u351 tirme (Lokal): `npm run dev` (Frontend & Backend e\u351  zamanl\u305 )\
+- Build: `npm run build`\
+- Lint: `npm run lint`\
+\
+## \uc0\u55356 \u57303 \u65039  Mimari ve Veri Kurallar\u305 \
+\
+### 1. Kullan\uc0\u305 c\u305  Sistemi & G\'fcvenlik\
+- **Bireysel \uc0\u304 zolasyon:** Her kullan\u305 c\u305 n\u305 n verisi `user_id` ile filtrelenmelidir. Kimse ba\u351 kas\u305 n\u305 n verisine eri\u351 emez.\
+- **E\uc0\u351  Modu (Shared Access):** `users` tablosunda `partner_id` alan\u305  \'fczerinden e\u351 le\u351 me yap\u305 l\u305 r. E\u351 le\u351 en kullan\u305 c\u305 lar ortak bir `household_id` \'fczerinden verileri (malzemeler, favori tarifler) ortak g\'f6r\'fcr.\
+- **Auth:** Supabase Auth kullan\uc0\u305 larak modern giri\u351  (Magic Link, Google) sa\u287 lanacakt\u305 r.\
+\
+### 2. Veri Y\'f6netimi\
+- **Veri Saklama:** Kullan\uc0\u305 c\u305 n\u305 n girdi\u287 i malzemeler ve \'fcretti\u287 i tarifler Supabase DB'de kal\u305 c\u305  olarak saklan\u305 r.\
+- **Yedekleme:** Kullan\uc0\u305 c\u305  t\'fcm verilerini tek t\u305 kla `.json` veya `.csv` format\u305 nda indirebilir.\
+- **Payla\uc0\u351 \u305 m:** Tarifler i\'e7in benzersiz "Payla\u351 \u305 m Linkleri" (`UUID`) olu\u351 turulacakt\u305 r.\
+\
+## \uc0\u55356 \u57256  UI/UX ve Tasar\u305 m Standartlar\u305 \
+- **G\'f6r\'fcn\'fcm:** Glassmorphism etkileri, pastel tonlar ve modern tipografi.\
+- **Animasyonlar:** - Sayfa ge\'e7i\uc0\u351 lerinde `Framer Motion` ile yumu\u351 ak kaymalar.\
+  - \uc0\u304 lk giri\u351 te "\u350 ef Kar\u351 \u305 lama" animasyonu.\
+  - Tarif \'fcretilirken "Yaz\uc0\u305  yazma" ve "Mutfak gere\'e7leri" animasyonlar\u305 .\
+- **Responsive:** Mobil \'f6ncelikli (Mobile-first) tasar\uc0\u305 m.\
+\
+## \uc0\u55357 \u56998  Geli\u351 tirme Yol Haritas\u305  (Claude'a Talimatlar)\
+1. **Veritaban\uc0\u305  Entegrasyonu:** `server.js` dosyas\u305 n\u305  Supabase istemcisi ile g\'fcncelle ve malzeme/tarif tablolar\u305 n\u305  olu\u351 tur.\
+2. **Auth Sistemi:** Frontend'e giri\uc0\u351 /kay\u305 t ekranlar\u305 n\u305  ekle.\
+3. **Senkronizasyon:** Malzeme listesini her de\uc0\u287 i\u351 ikli\u287 inde DB'ye kaydet ve her giri\u351 te oradan \'e7ek.\
+4. **Payla\uc0\u351 \u305 m \'d6zelli\u287 i:** E\u351 le\u351 en ID'ler i\'e7in ortak g\'f6r\'fcn\'fcm mant\u305 \u287 \u305 n\u305  koda i\u351 le.\
+5. **Animasyon Katman\uc0\u305 :** `App.jsx` ve bile\u351 enlere `AnimatePresence` entegre et.\
+\
+## \uc0\u9729 \u65039  Yay\u305 nlama (Deployment)\
+- **GitHub:** Proje ana dizininde `.env.example` bulundur. Hassas verileri asla repoya y\'fckleme.\
+- **Vercel:** `vercel.json` dosyas\uc0\u305 n\u305  serverless fonksiyonlar\u305  destekleyecek \u351 ekilde yap\u305 land\u305 r.}
