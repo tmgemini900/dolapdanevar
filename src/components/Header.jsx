@@ -7,9 +7,12 @@ export default function Header({ profile, partnerProfile, activeTab, onTabChange
   };
 
   const tabs = [
-    { id: "search", label: "Tarif Bul", icon: "🍳" },
-    { id: "saved", label: "Kayıtlılar", icon: "❤️" },
-    { id: "partner", label: "Eşim", icon: "💑" },
+    { id: "search",   label: "Tarif Bul",  icon: "🍳" },
+    { id: "kitchen",  label: "Mutfak",     icon: "🥦" },
+    { id: "shopping", label: "Alışveriş",  icon: "🛒" },
+    { id: "overview", label: "Özet",       icon: "📊" },
+    { id: "saved",    label: "Kayıtlılar", icon: "❤️" },
+    { id: "partner",  label: "Eşim",       icon: "💑" },
   ];
 
   return (

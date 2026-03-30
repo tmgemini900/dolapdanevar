@@ -3,12 +3,15 @@ import { AnimatePresence, motion } from "framer-motion";
 import "./App.css";
 
 import { supabase } from "./lib/supabase";
-import SplashScreen   from "./components/SplashScreen";
-import AuthPage       from "./components/AuthPage";
-import Header         from "./components/Header";
-import RecipeModal    from "./components/RecipeModal";
-import SavedRecipes   from "./components/SavedRecipes";
-import PartnerPanel   from "./components/PartnerPanel";
+import SplashScreen     from "./components/SplashScreen";
+import AuthPage         from "./components/AuthPage";
+import Header           from "./components/Header";
+import RecipeModal      from "./components/RecipeModal";
+import SavedRecipes     from "./components/SavedRecipes";
+import PartnerPanel     from "./components/PartnerPanel";
+import KitchenInventory from "./components/KitchenInventory";
+import ShoppingList     from "./components/ShoppingList";
+import Overview         from "./components/Overview";
 
 /* ─── Sabitler ─── */
 const CATEGORIES = ["Tümü", "Çorba", "Salata", "Sandviç", "Ana Yemek"];
@@ -51,6 +54,7 @@ export default function App() {
   const [selectedCategory, setSelectedCategory] = useState("Tümü");
   const [selectedRecipe, setSelectedRecipe]     = useState(null);
   const [error, setError]                 = useState("");
+  const [kitchenNames, setKitchenNames]   = useState([]);
   const inputRef = useRef(null);
 
   /* ─── Auth listener ─── */
@@ -58,13 +62,22 @@ export default function App() {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setAuthReady(true);
-      if (session) loadProfile(session.user.id);
+      if (session) {
+        loadProfile(session.user.id);
+        loadKitchenNames(session.user.id);
+      }
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
-      if (session) loadProfile(session.user.id);
-      else { setProfile(null); setPartnerProfile(null); }
+      if (session) {
+        loadProfile(session.user.id);
+        loadKitchenNames(session.user.id);
+      } else {
+        setProfile(null);
+        setPartnerProfile(null);
+        setKitchenNames([]);
+      }
     });
 
     return () => subscription.unsubscribe();
@@ -90,6 +103,18 @@ export default function App() {
       .eq("id", pid)
       .single();
     setPartnerProfile(data || null);
+  };
+
+  const loadKitchenNames = async (uid) => {
+    const { data } = await supabase
+      .from("kitchen_items")
+      .select("name")
+      .eq("user_id", uid)
+      .order("name");
+    if (data) {
+      const unique = [...new Set(data.map((d) => d.name.trim().toLowerCase()))];
+      setKitchenNames(unique);
+    }
   };
 
   /* ─── Malzeme yönetimi ─── */
@@ -171,6 +196,9 @@ export default function App() {
       ? recipes
       : recipes.filter((r) => r.category === selectedCategory);
 
+  /* ─── Tab change helper (for Overview nav) ─── */
+  const handleTabChange = (tab) => setActiveTab(tab);
+
   /* ─── Render ─── */
   return (
     <>
@@ -198,7 +226,7 @@ export default function App() {
                 profile={profile}
                 partnerProfile={partnerProfile}
                 activeTab={activeTab}
-                onTabChange={setActiveTab}
+                onTabChange={handleTabChange}
               />
 
               <main className="main">
@@ -245,6 +273,27 @@ export default function App() {
                               </motion.span>
                             ))}
                             <button className="clear-all" onClick={() => setIngredients([])}>Temizle</button>
+                          </div>
+                        )}
+
+                        {/* Dolapta var — kitchen inventory chips */}
+                        {kitchenNames.length > 0 && (
+                          <div className="quick-section">
+                            <p className="quick-label">🥦 Dolapta Var</p>
+                            <div className="quick-grid">
+                              {kitchenNames.map((s) => {
+                                const on = ingredients.includes(s);
+                                return (
+                                  <button
+                                    key={s}
+                                    className={`quick-chip kitchen-chip${on ? " on" : ""}`}
+                                    onClick={() => on ? removeIngredient(s) : addIngredient(s)}
+                                  >
+                                    {on && <span className="chip-tick">✓</span>} {s}
+                                  </button>
+                                );
+                              })}
+                            </div>
                           </div>
                         )}
 
@@ -345,6 +394,34 @@ export default function App() {
                         <p className="empty">Bu kategoride tarif yok. Başka bir kategori dene.</p>
                       )}
                     </motion.div>
+                  )}
+
+                  {/* ── TAB: Mutfak Envanteri ── */}
+                  {activeTab === "kitchen" && (
+                    <KitchenInventory
+                      key="kitchen"
+                      userId={session.user.id}
+                      partnerProfile={partnerProfile}
+                    />
+                  )}
+
+                  {/* ── TAB: Alışveriş Listesi ── */}
+                  {activeTab === "shopping" && (
+                    <ShoppingList
+                      key="shopping"
+                      userId={session.user.id}
+                      partnerProfile={partnerProfile}
+                    />
+                  )}
+
+                  {/* ── TAB: Özet ── */}
+                  {activeTab === "overview" && (
+                    <Overview
+                      key="overview"
+                      userId={session.user.id}
+                      partnerProfile={partnerProfile}
+                      onTabChange={handleTabChange}
+                    />
                   )}
 
                   {/* ── TAB: Kayıtlılar ── */}
