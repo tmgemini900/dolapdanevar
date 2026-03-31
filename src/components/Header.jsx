@@ -13,7 +13,7 @@ export default function Header({ profile, partnerProfile, activeTab, onTabChange
     { id: "budget",   label: "Bütçe",      icon: "💰" },
     { id: "overview", label: "Özet",       icon: "📊" },
     { id: "saved",    label: "Kayıtlılar", icon: "❤️" },
-    { id: "partner",  label: "Eşim",       icon: "💑" },
+    { id: "partner",  label: "Paylaşım",   icon: "🤝" },
   ];
 
   return (
@@ -31,7 +31,7 @@ export default function Header({ profile, partnerProfile, activeTab, onTabChange
             <p className="header-sub">
               {partnerProfile ? (
                 <span className="header-partner-badge">
-                  💑 {profile?.display_name} & {partnerProfile.display_name}
+                  🤝 {profile?.display_name} & {partnerProfile.display_name}
                 </span>
               ) : (
                 "Malzemelerini gir · Dünya mutfağından tarifler gelsin ✨"

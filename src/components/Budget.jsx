@@ -303,7 +303,7 @@ export default function Budget({ userId, partnerProfile }) {
                       <span className="inv-badge">{tx.category}</span>
                       <span className="inv-badge">{fmtDate(tx.date)}</span>
                       {!isOwn && partnerProfile && (
-                        <span className="inv-badge partner">💑 {partnerProfile.display_name}</span>
+                        <span className="inv-badge partner">🤝 {partnerProfile.display_name}</span>
                       )}
                     </div>
                   </div>

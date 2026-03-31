@@ -32,7 +32,7 @@ export default function PartnerPanel({ profile, partnerProfile, onPartnerChange 
       if (error) throw error;
 
       if (data === "ok") {
-        showToast("💑 Eşleşme başarılı!", "success");
+        showToast("🤝 Mutfak paylaşımı başarılı!", "success");
         setCode("");
         onPartnerChange();
       } else if (data === "not_found") {
@@ -48,12 +48,12 @@ export default function PartnerPanel({ profile, partnerProfile, onPartnerChange 
   };
 
   const handleUnlink = async () => {
-    if (!confirm("Eşleşmeyi kaldırmak istediğine emin misin?")) return;
+    if (!confirm("Mutfak paylaşımını kaldırmak istediğine emin misin?")) return;
     setLoading(true);
     try {
       const { error } = await supabase.rpc("unlink_partners", { my_id: profile.id });
       if (error) throw error;
-      showToast("Eşleşme kaldırıldı.");
+      showToast("Mutfak paylaşımı kaldırıldı.");
       onPartnerChange();
     } catch {
       showToast("⚠ Bir hata oluştu.");
@@ -86,8 +86,8 @@ export default function PartnerPanel({ profile, partnerProfile, onPartnerChange 
 
       <div className="panel-header">
         <div>
-          <h2 className="panel-title">💑 Eş / Partner Paylaşımı</h2>
-          <p className="panel-sub">Eşinle tarifleri birlikte keşfedin</p>
+          <h2 className="panel-title">🤝 Mutfak Paylaşımı</h2>
+          <p className="panel-sub">Birlikte yemek planlayin, tarif keşfedin</p>
         </div>
       </div>
 
@@ -116,30 +116,30 @@ export default function PartnerPanel({ profile, partnerProfile, onPartnerChange 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
         >
-          <div className="partner-link-icon">💑</div>
+          <div className="partner-link-icon">🤝</div>
           <div className="partner-avatar partner-avatar-alt">
             {(partnerProfile.display_name || "?")[0].toUpperCase()}
           </div>
           <div className="partner-info">
             <p className="partner-name">{partnerProfile.display_name}</p>
             <p className="partner-email">{partnerProfile.email}</p>
-            <p className="partner-linked-badge">✓ Eşleşmiş</p>
+            <p className="partner-linked-badge">✓ Bağlı</p>
           </div>
           <button
             className="btn-unlink"
             onClick={handleUnlink}
             disabled={loading}
           >
-            Eşleşmeyi Kaldır
+            Paylaşımı Kaldır
           </button>
         </motion.div>
       ) : (
         /* Partner bağlama formu */
         <div className="partner-link-form">
-          <h3 className="partner-link-title">Eşinle Bağlan</h3>
+          <h3 className="partner-link-title">Mutfak Paylaşımı Başlat</h3>
           <p className="partner-link-desc">
-            Eşinin uygulamadaki 6 haneli kodunu girerek tarifleri birlikte görebilirsiniz.
-            Eşinin kodunu senden paylaşmasını iste.
+            Birinin uygulamadaki 6 haneli kodunu girerek mutfağınızı birlikte yönetebilirsiniz.
+            Paylaşmak istediğin kişiden kodunu alman yeterli.
           </p>
           <div className="partner-input-row">
             <input
@@ -157,17 +157,17 @@ export default function PartnerPanel({ profile, partnerProfile, onPartnerChange 
               disabled={loading || !code.trim()}
               whileTap={{ scale: 0.95 }}
             >
-              {loading ? <span className="spinner" /> : "💑 Bağlan"}
+              {loading ? <span className="spinner" /> : "🤝 Bağlan"}
             </motion.button>
           </div>
 
           <div className="partner-how">
             <h4 className="partner-how-title">Nasıl Çalışır?</h4>
             <ol className="partner-how-steps">
-              <li>Eşin "Dolapta Ne Var?" uygulamasına üye olsun</li>
-              <li>Eşinin <strong>Eşim</strong> sayfasındaki kodunu al</li>
+              <li>Paylaşmak istediğin kişi "Dolapta Ne Var?" uygulamasına üye olsun</li>
+              <li>O kişinin <strong>Paylaşım</strong> sayfasındaki kodunu al</li>
               <li>Yukarıdaki kutuya o kodu gir ve <strong>Bağlan</strong>'a tıkla</li>
-              <li>Artık birbirinizin kayıtlı tariflerini görebilirsiniz! ❤️</li>
+              <li>Artık birlikte mutfak envanteri, tarifler ve alışveriş listesi paylaşabilirsiniz! 🍽️</li>
             </ol>
           </div>
         </div>

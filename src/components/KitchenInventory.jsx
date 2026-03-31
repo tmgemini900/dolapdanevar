@@ -236,7 +236,7 @@ export default function KitchenInventory({ userId, partnerProfile }) {
           )}
           {partnerItems.length > 0 && partnerProfile && (
             <div className="inv-section">
-              <p className="inv-section-label">💑 {partnerProfile.display_name}</p>
+              <p className="inv-section-label">🤝 {partnerProfile.display_name}</p>
               <div className="inv-list">
                 <AnimatePresence>
                   {partnerItems.map((item) => (

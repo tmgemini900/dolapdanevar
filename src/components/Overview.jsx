@@ -132,7 +132,7 @@ export default function Overview({ userId, partnerProfile, onTabChange }) {
                           <span className="inv-badge">{item.quantity} {item.unit}</span>
                           <span className={`inv-badge expiry-badge ${s.status}`}>{label}</span>
                           {item.user_id !== userId && partnerProfile && (
-                            <span className="inv-badge partner">💑 {partnerProfile.display_name}</span>
+                            <span className="inv-badge partner">🤝 {partnerProfile.display_name}</span>
                           )}
                         </div>
                       </div>
@@ -182,7 +182,7 @@ export default function Overview({ userId, partnerProfile, onTabChange }) {
                     </div>
                     {item.user_id !== userId && partnerProfile && (
                       <span className="inv-badge partner" style={{ fontSize: 11 }}>
-                        💑 {partnerProfile.display_name}
+                        🤝 {partnerProfile.display_name}
                       </span>
                     )}
                   </div>

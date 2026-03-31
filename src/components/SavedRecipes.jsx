@@ -164,7 +164,7 @@ export default function SavedRecipes({ userId, profile, partnerProfile }) {
                     {isOwn ? (
                       <span className="owner-mine">Sen</span>
                     ) : (
-                      <span className="owner-partner">💑 {partnerProfile?.display_name}</span>
+                      <span className="owner-partner">🤝 {partnerProfile?.display_name}</span>
                     )}
                   </div>
 

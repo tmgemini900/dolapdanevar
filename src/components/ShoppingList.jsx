@@ -164,7 +164,7 @@ export default function ShoppingList({ userId, partnerProfile }) {
 
               {partnerPending.length > 0 && partnerProfile && (
                 <>
-                  <p className="inv-section-label partner-label">💑 {partnerProfile.display_name}</p>
+                  <p className="inv-section-label partner-label">🤝 {partnerProfile.display_name}</p>
                   <div className="inv-list">
                     <AnimatePresence>
                       {partnerPending.map((item) => (
