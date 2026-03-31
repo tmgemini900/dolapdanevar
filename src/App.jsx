@@ -12,6 +12,7 @@ import PartnerPanel     from "./components/PartnerPanel";
 import KitchenInventory from "./components/KitchenInventory";
 import ShoppingList     from "./components/ShoppingList";
 import Overview         from "./components/Overview";
+import Budget           from "./components/Budget";
 
 /* ─── Sabitler ─── */
 const CATEGORIES = ["Tümü", "Çorba", "Salata", "Sandviç", "Ana Yemek"];
@@ -155,16 +156,51 @@ export default function App() {
 
       const reader  = res.body.getReader();
       const decoder = new TextDecoder();
+      let streamBuffer = "";
 
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
-        for (const line of decoder.decode(value).split("\n")) {
+        
+        streamBuffer += decoder.decode(value, { stream: true });
+        const lines = streamBuffer.split("\n");
+        streamBuffer = lines.pop() || "";
+
+        for (const line of lines) {
           if (!line.startsWith("data: ")) continue;
+          const dataContent = line.slice(6).trim();
+          if (!dataContent) continue;
+          if (dataContent === "[DONE]") {
+              try {
+                const m = buffer.match(/\{[\s\S]*\}/);
+                if (m) {
+                  const parsed = JSON.parse(m[0]);
+                  const raw = parsed.recipes;
+                  const list = Array.isArray(raw)
+                    ? raw
+                    : raw && typeof raw === "object"
+                    ? Object.values(raw)
+                    : [];
+                  if (list.length > 0) {
+                    setRecipes(list);
+                  } else {
+                    setError("Uygun tarif bulunamadı, farklı malzemeler deneyin.");
+                  }
+                }
+              } catch (e) {
+                console.error("Tarif okuma hatasi", e, buffer);
+                setError("Tarif verisi okunamadı, tekrar deneyin.");
+              }
+              break;
+          }
+          
           try {
-            const d = JSON.parse(line.slice(6));
+            const d = JSON.parse(dataContent);
             if (d.error) { setError(d.error); break; }
-            if (d.done) {
+            if (d.text) {
+              buffer += d.text;
+            } else if (d.done) {
+              // Legacy fallback, in case the server sends "done" as JSON
               try {
                 const m = buffer.match(/\{[\s\S]*\}/);
                 if (m) {
@@ -177,11 +213,15 @@ export default function App() {
                     : [];
                   setRecipes(list);
                 }
-              } catch {
+              } catch (e) {
+                console.error("Tarif okuma hatasi", e, buffer);
                 setError("Tarif verisi okunamadı, tekrar deneyin.");
               }
-            } else if (d.text) buffer += d.text;
-          } catch { /* incomplete chunk */ }
+            }
+          } catch (e) { 
+            // Incomplete JSON or noise 
+            console.warn("Parse atlandi:", dataContent);
+          }
         }
       }
     } catch {
@@ -409,6 +449,15 @@ export default function App() {
                   {activeTab === "shopping" && (
                     <ShoppingList
                       key="shopping"
+                      userId={session.user.id}
+                      partnerProfile={partnerProfile}
+                    />
+                  )}
+
+                  {/* ── TAB: Bütçe ── */}
+                  {activeTab === "budget" && (
+                    <Budget
+                      key="budget"
                       userId={session.user.id}
                       partnerProfile={partnerProfile}
                     />

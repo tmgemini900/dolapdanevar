@@ -1573,6 +1573,193 @@ button { cursor: pointer; font: inherit; border: none; background: none; }
 }
 .ov-action-btn:hover { background: rgba(255,107,53,0.15); border-color: rgba(255,107,53,0.3); color: #ff6b35; }
 
+/* ═══════════════════════════════════════════════
+   BUDGET / BÜTÇEAPP
+   ═══════════════════════════════════════════════ */
+.budget-balance-card {
+  background: linear-gradient(135deg, rgba(99,102,241,0.25), rgba(168,85,247,0.2));
+  border: 1px solid rgba(99,102,241,0.35);
+  border-radius: 20px;
+  padding: 24px 20px 20px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+.budget-balance-label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: rgba(255,255,255,0.45);
+  margin-bottom: 6px;
+}
+.budget-balance-amount {
+  font-size: 40px;
+  font-weight: 900;
+  color: #a78bfa;
+  letter-spacing: -1px;
+  margin-bottom: 16px;
+}
+.budget-balance-amount.negative { color: #f87171; }
+
+.budget-balance-row {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+.budget-bal-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+}
+.budget-bal-item.income .bbal-icon { color: #4ade80; }
+.budget-bal-item.expense .bbal-icon { color: #f87171; }
+.bbal-icon { font-size: 20px; font-weight: 900; }
+.bbal-label {
+  display: block;
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.bbal-value {
+  display: block;
+  font-size: 16px;
+  font-weight: 800;
+  color: #fff;
+}
+.budget-bal-divider {
+  width: 1px;
+  height: 36px;
+  background: rgba(255,255,255,0.1);
+  margin: 0 12px;
+}
+
+.budget-add-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+  align-items: center;
+}
+.budget-add-btn {
+  flex: 1;
+  padding: 11px 16px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 14px;
+  transition: all 0.2s;
+  border: 1.5px solid transparent;
+}
+.budget-add-btn.income {
+  background: rgba(74,222,128,0.1);
+  border-color: rgba(74,222,128,0.3);
+  color: #4ade80;
+}
+.budget-add-btn.income.active, .budget-add-btn.income:hover {
+  background: rgba(74,222,128,0.2);
+  border-color: #4ade80;
+}
+.budget-add-btn.expense {
+  background: rgba(248,113,113,0.1);
+  border-color: rgba(248,113,113,0.3);
+  color: #f87171;
+}
+.budget-add-btn.expense.active, .budget-add-btn.expense:hover {
+  background: rgba(248,113,113,0.2);
+  border-color: #f87171;
+}
+.budget-cancel-btn {
+  padding: 10px 14px;
+  border-radius: 10px;
+  color: rgba(255,255,255,0.4);
+  font-size: 14px;
+  border: 1px solid rgba(255,255,255,0.1);
+  transition: all 0.2s;
+}
+.budget-cancel-btn:hover { color: #f87171; border-color: rgba(248,113,113,0.3); }
+
+.budget-form { margin-bottom: 16px; overflow: hidden; }
+.budget-form-type-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+.budget-form-type-badge.income { background: rgba(74,222,128,0.15); color: #4ade80; }
+.budget-form-type-badge.expense { background: rgba(248,113,113,0.15); color: #f87171; }
+
+.budget-categories { margin-bottom: 16px; }
+.budget-cat-list { display: flex; flex-direction: column; gap: 10px; }
+.budget-cat-row {
+  display: grid;
+  grid-template-columns: 140px 1fr 90px 40px;
+  align-items: center;
+  gap: 10px;
+}
+.budget-cat-name { font-size: 13px; color: rgba(255,255,255,0.7); font-weight: 500; }
+.budget-cat-bar-wrap {
+  height: 6px;
+  background: rgba(255,255,255,0.07);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.budget-cat-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #f87171, #e91e8c);
+  border-radius: 3px;
+}
+.budget-cat-amount { font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.7); text-align: right; }
+.budget-cat-pct { font-size: 11px; color: rgba(255,255,255,0.35); text-align: right; }
+
+.budget-tx-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  transition: border-color 0.2s;
+}
+.budget-tx-row.income { border-left: 3px solid rgba(74,222,128,0.5); }
+.budget-tx-row.expense { border-left: 3px solid rgba(248,113,113,0.5); }
+
+.budget-tx-sign {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 900;
+  flex-shrink: 0;
+}
+.budget-tx-sign.income { background: rgba(74,222,128,0.15); color: #4ade80; }
+.budget-tx-sign.expense { background: rgba(248,113,113,0.15); color: #f87171; }
+
+.budget-tx-info { flex: 1; min-width: 0; }
+.budget-tx-title {
+  display: block;
+  font-weight: 600;
+  font-size: 15px;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.budget-tx-amount {
+  font-weight: 800;
+  font-size: 15px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.budget-tx-amount.income { color: #4ade80; }
+.budget-tx-amount.expense { color: #f87171; }
+
 /* kitchen inventory chips in recipe search */
 .kitchen-chip {
   background: rgba(74,222,128,0.08);
