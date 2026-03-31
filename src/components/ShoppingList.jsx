@@ -52,6 +52,9 @@ export default function ShoppingList({ userId, partnerProfile }) {
       setItems((p) => [data, ...p]);
       setInputValue("");
       inputRef.current?.focus();
+    } else if (error) {
+      console.error("Alışveriş listesi ekleme hatası:", error);
+      showToast("❌ Hata: " + (error.message || "Bilinmeyen hata"));
     }
   };
 

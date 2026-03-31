@@ -59,6 +59,9 @@ export default function KitchenInventory({ userId, partnerProfile }) {
       setShowAddForm(false);
       showToast("✅ Ürün eklendi!");
       loadItems();
+    } else {
+      console.error("Ürün ekleme hatası:", error);
+      showToast("❌ Hata: " + (error.message || "Bilinmeyen hata"));
     }
     setSaving(false);
   };

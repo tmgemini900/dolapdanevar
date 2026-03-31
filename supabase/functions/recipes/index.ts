@@ -33,13 +33,17 @@ serve(async (req) => {
     const userPrompt = `Elimde şu malzemeler var: ${ingredients.join(", ")}.
 
 Bu malzemeleri kullanarak 6 farklı tarif üret. JSON formatında döndür:
-{"recipes":[{"id":"benzersiz-id","name":"Tarif Adı","cuisine":"Mutfak","category":"Çorba|Salata|Sandviç|Ana Yemek","time":"25 dk","difficulty":"Kolay|Orta|Zor","servings":"2-3 kişilik","description":"2 cümle açıklama","emoji":"🍜","ingredients":["200g tavuk"],"steps":["Adım 1"],"tip":"Şef ipucu"}]}
+{"recipes":[{"id":"benzersiz-id","name":"Tarif Adı","cuisine":"Mutfak","category":"Çorba|Salata|Sandviç|Ana Yemek","time":"25 dk","difficulty":"Kolay|Orta|Zor","servings":"2-3 kişilik","description":"2 cümle açıklama","emoji":"🍜","ingredients":["200g tavuk","1 soğan","2 diş sarımsak"],"steps":["Adım 1 açıklaması — ne yapıldığı, nasıl yapıldığı ve neden önemli olduğunu 2-3 cümleyle anlat.","Adım 2 açıklaması — sıcaklık, süre ve teknik detayları mutlaka belirt."],"tip":"Şef ipucu"}]}
 
 Kurallar:
 - recipes alanı bir JSON array olsun (6 eleman)
 - Her tarif farklı dünya mutfağından olsun (Türk, İtalyan, Meksika, Japon, Fransız, Hint, Yunan, Amerikan vb.)
 - Farklı kategoriler kullan: Çorba, Salata, Sandviç, Ana Yemek
-- id değerleri benzersiz olsun`;
+- id değerleri benzersiz olsun
+- Her tarif için steps alanında en az 6, en fazla 10 adım olsun
+- Her adım 2-3 cümleden oluşsun: ne yapılacağı, nasıl yapılacağı (süre, sıcaklık, teknik) ve sonucun nasıl görünmesi gerektiği
+- Adımlar sıralı ve mantıklı olsun; yeni başlayan biri de anlayabilmeli
+- ingredients listesinde miktar ve ölçü birimi mutlaka olsun (örn. "200g tavuk göğsü", "1 çay kaşığı tuz")`;
 
     const groqRes = await fetch(GROQ_URL, {
       method: "POST",
@@ -54,7 +58,7 @@ Kurallar:
           { role: "user", content: userPrompt },
         ],
         stream: true,
-        max_tokens: 4096,
+        max_tokens: 8192,
         response_format: { type: "json_object" },
       }),
     });
