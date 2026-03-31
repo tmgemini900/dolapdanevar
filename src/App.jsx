@@ -132,14 +132,19 @@ export default function App() {
     []
   );
 
-  /* ─── Tarif arama (Edge Function) ─── */
+  /* ─── Tarif arama (Supabase Edge Function) ─── */
   const getRecipes = async () => {
     if (!ingredients.length) { setError("Lütfen en az bir malzeme ekle!"); return; }
     setError(""); setLoading(true); setRecipes([]); setSelectedRecipe(null);
 
     let buffer = "";
     try {
-      const { data: { session: s } } = await supabase.auth.getSession();
+      // Token al, expire olmuşsa refresh et
+      let { data: { session: s } } = await supabase.auth.getSession();
+      if (!s?.access_token) {
+        const { data } = await supabase.auth.refreshSession();
+        s = data.session;
+      }
 
       const res = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/recipes`,
@@ -147,60 +152,31 @@ export default function App() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${s?.access_token}`,
+            Authorization: `Bearer ${s?.access_token ?? "anon"}`,
             apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
           },
           body: JSON.stringify({ ingredients }),
         }
       );
 
+      if (!res.ok && res.status === 401) {
+        setError("Oturum süreniz dolmuş. Lütfen çıkış yapıp tekrar giriş yapın.");
+        setLoading(false);
+        return;
+      }
+
       const reader  = res.body.getReader();
       const decoder = new TextDecoder();
-      let streamBuffer = "";
 
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
-        
-        streamBuffer += decoder.decode(value, { stream: true });
-        const lines = streamBuffer.split("\n");
-        streamBuffer = lines.pop() || "";
-
-        for (const line of lines) {
+        for (const line of decoder.decode(value).split("\n")) {
           if (!line.startsWith("data: ")) continue;
-          const dataContent = line.slice(6).trim();
-          if (!dataContent) continue;
-          if (dataContent === "[DONE]") {
-              try {
-                const m = buffer.match(/\{[\s\S]*\}/);
-                if (m) {
-                  const parsed = JSON.parse(m[0]);
-                  const raw = parsed.recipes;
-                  const list = Array.isArray(raw)
-                    ? raw
-                    : raw && typeof raw === "object"
-                    ? Object.values(raw)
-                    : [];
-                  if (list.length > 0) {
-                    setRecipes(list);
-                  } else {
-                    setError("Uygun tarif bulunamadı, farklı malzemeler deneyin.");
-                  }
-                }
-              } catch (e) {
-                console.error("Tarif okuma hatasi", e, buffer);
-                setError("Tarif verisi okunamadı, tekrar deneyin.");
-              }
-              break;
-          }
-          
           try {
-            const d = JSON.parse(dataContent);
+            const d = JSON.parse(line.slice(6));
             if (d.error) { setError(d.error); break; }
-            if (d.text) {
-              buffer += d.text;
-            } else if (d.done) {
-              // Legacy fallback, in case the server sends "done" as JSON
+            if (d.done) {
               try {
                 const m = buffer.match(/\{[\s\S]*\}/);
                 if (m) {
@@ -213,23 +189,21 @@ export default function App() {
                     : [];
                   setRecipes(list);
                 }
-              } catch (e) {
-                console.error("Tarif okuma hatasi", e, buffer);
+              } catch {
                 setError("Tarif verisi okunamadı, tekrar deneyin.");
               }
-            }
-          } catch (e) { 
-            // Incomplete JSON or noise 
-            console.warn("Parse atlandi:", dataContent);
-          }
+            } else if (d.text) buffer += d.text;
+          } catch { /* incomplete chunk */ }
         }
       }
-    } catch {
+    } catch (err) {
+      console.error("Tarif hatası:", err);
       setError("Sunucuya bağlanılamadı. Lütfen tekrar deneyin.");
     } finally {
       setLoading(false);
     }
   };
+
 
   const filtered =
     selectedCategory === "Tümü"
